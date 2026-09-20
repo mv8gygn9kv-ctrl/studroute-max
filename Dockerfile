@@ -1,21 +1,17 @@
 FROM node:20-alpine
-# MAX API с 19.07.2026 использует цепочку Russian Trusted CA.
-# Добавляем корневой и выпускающий сертификаты Минцифры в trust store контейнера.
-RUN apk add --no-cache ca-certificates curl openssl \
-    && curl -kfsSL https://gu-st.ru/content/Other/doc/russian_trusted_root_ca.cer -o /tmp/russian_root.cer \
-    && curl -kfsSL https://gu-st.ru/content/Other/doc/russian_trusted_sub_ca.cer -o /tmp/russian_sub.cer \
-    && (openssl x509 -in /tmp/russian_root.cer -noout >/dev/null 2>&1 \
-        && openssl x509 -in /tmp/russian_root.cer -out /usr/local/share/ca-certificates/russian_trusted_root_ca.crt \
-        || openssl x509 -inform DER -in /tmp/russian_root.cer -out /usr/local/share/ca-certificates/russian_trusted_root_ca.crt) \
-    && (openssl x509 -in /tmp/russian_sub.cer -noout >/dev/null 2>&1 \
-        && openssl x509 -in /tmp/russian_sub.cer -out /usr/local/share/ca-certificates/russian_trusted_sub_ca.crt \
-        || openssl x509 -inform DER -in /tmp/russian_sub.cer -out /usr/local/share/ca-certificates/russian_trusted_sub_ca.crt) \
-    && openssl x509 -in /usr/local/share/ca-certificates/russian_trusted_root_ca.crt -noout -subject | grep -F "Russian Trusted Root CA" \
-    && openssl x509 -in /usr/local/share/ca-certificates/russian_trusted_sub_ca.crt -noout -subject | grep -F "Russian Trusted Sub CA" \
-    && update-ca-certificates \
-    && rm -f /tmp/russian_root.cer /tmp/russian_sub.cer
+
+# MAX API v2 uses a certificate chain rooted in the Russian Trusted CA.
+# The official CA bundle is vendored in the public max-action repository.
+# We verify the published SHA-256 before trusting it.
+RUN apk add --no-cache ca-certificates curl \
+    && mkdir -p /app/certs \
+    && curl -fsSL https://raw.githubusercontent.com/Fgeeha/max-action/Master/internal/maxapi/certs/russian_trusted_ca.pem \
+       -o /app/certs/russian_trusted_ca.pem \
+    && echo "6d1b66e7c1aa2512ad3abb50d6a6f144c9ee9d80fd7fbe1c9255a39f8e790944  /app/certs/russian_trusted_ca.pem" \
+       | sha256sum -c -
 
 WORKDIR /app
+
 COPY package.json ./
 COPY src ./src
 COPY public ./public
@@ -25,7 +21,7 @@ COPY openapi.yaml DATA-API.yaml ./
 
 ENV NODE_ENV=production
 ENV PORT=8080
-ENV NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
+ENV NODE_EXTRA_CA_CERTS=/app/certs/russian_trusted_ca.pem
 
 EXPOSE 8080
 CMD ["node", "src/server.js"]
