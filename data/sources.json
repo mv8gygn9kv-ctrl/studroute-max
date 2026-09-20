@@ -8,7 +8,10 @@
     "checked_at": "2026-09-20",
     "title_zh": "СПбГЭУ — 国际学生事务部门",
     "publisher_zh": "圣彼得堡国立经济大学（СПбГЭУ）",
-    "scope_zh": "СПбГЭУ国际学生的办理规则与校内组织期限"
+    "scope_zh": "СПбГЭУ国际学生的办理规则和校内行政期限",
+    "title_en": "UNECON — International Students Office",
+    "publisher_en": "Saint Petersburg State University of Economics (UNECON)",
+    "scope_en": "Rules and administrative deadlines for UNECON international students"
   },
   {
     "id": "spb_migration_registration",
@@ -19,7 +22,10 @@
     "checked_at": "2026-09-20",
     "title_zh": "圣彼得堡外国公民居留地移民登记",
     "publisher_zh": "圣彼得堡国家和市政服务门户",
-    "scope_zh": "圣彼得堡移民登记、办理渠道和一般要求"
+    "scope_zh": "圣彼得堡移民登记的办理渠道和一般要求",
+    "title_en": "Migration registration for foreign nationals at the place of stay in Saint Petersburg",
+    "publisher_en": "Saint Petersburg Public Services Portal",
+    "scope_en": "Migration registration in Saint Petersburg, submission channels and general requirements"
   },
   {
     "id": "max_bridge",
@@ -30,7 +36,10 @@
     "checked_at": "2026-09-20",
     "title_zh": "MAX Bridge",
     "publisher_zh": "MAX 开发者平台",
-    "scope_zh": "小程序与MAX客户端之间的交互"
+    "scope_zh": "小程序与 MAX 客户端之间的交互",
+    "title_en": "MAX Bridge",
+    "publisher_en": "MAX for Developers",
+    "scope_en": "Interaction between the mini app and the MAX client"
   },
   {
     "id": "max_api",
@@ -41,6 +50,9 @@
     "checked_at": "2026-09-20",
     "title_zh": "MAX Bot API",
     "publisher_zh": "MAX 开发者平台",
-    "scope_zh": "聊天机器人、消息、Webhook和Long Polling"
+    "scope_zh": "聊天机器人、消息、Webhook 与 Long Polling",
+    "title_en": "MAX Bot API",
+    "publisher_en": "MAX for Developers",
+    "scope_en": "Chatbots, messages, webhooks and long polling"
   }
 ]

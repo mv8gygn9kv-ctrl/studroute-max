@@ -29,7 +29,7 @@
         <h2 data-i18n="profileTitle">Соберите маршрут</h2>
         <p class="muted" data-i18n="profileLead">MVP рассчитан на иностранного студента 18+, впервые прибывшего на очное обучение в СПбГЭУ.</p>
         <form id="profileForm" class="form-grid">
-          <label><span data-i18n="arrival">Дата въезда в РФ</span><input id="arrivalDate" type="date" required /></label>
+          <label><span data-i18n="arrival">Дата въезда в РФ</span><span class="date-control"><input id="arrivalDate" type="date" required /><span id="arrivalDateDisplay" class="date-display" aria-hidden="true"></span></span></label>
           <label><span data-i18n="housing">Где вы живёте</span>
             <select id="housing">
               <option value="dorm" data-i18n="dorm">Общежитие СПбГЭУ</option>
@@ -39,8 +39,8 @@
           <label class="switch-row"><input id="stayOver90" type="checkbox" checked /><span data-i18n="over90">Планирую быть в РФ более 90 дней</span></label>
           <label class="switch-row"><input id="citizenshipBelarus" type="checkbox" /><span data-i18n="belarus">Я гражданин(ка) Беларуси</span></label>
           <label class="switch-row"><input id="visaRequired" type="checkbox" checked /><span data-i18n="visaRequired">Для учёбы нужна виза</span></label>
-          <label id="visaExpiryLabel"><span data-i18n="visaExpiry">Виза действует до</span><input id="visaExpiry" type="date" /></label>
-          <label><span data-i18n="regExpiry">Миграционный учёт действует до (если уже оформлен)</span><input id="registrationExpiry" type="date" /></label>
+          <label id="visaExpiryLabel"><span data-i18n="visaExpiry">Виза действует до</span><span class="date-control"><input id="visaExpiry" type="date" /><span id="visaExpiryDisplay" class="date-display" aria-hidden="true"></span></span></label>
+          <label><span data-i18n="regExpiry">Миграционный учёт действует до (если уже оформлен)</span><span class="date-control"><input id="registrationExpiry" type="date" /><span id="registrationExpiryDisplay" class="date-display" aria-hidden="true"></span></span></label>
           <button class="primary" type="submit" data-i18n="build">Построить маршрут</button>
         </form>
       </div>
@@ -53,7 +53,7 @@
       <div class="card">
         <h2 data-i18n="eventTitle">Что-то изменилось?</h2>
         <p class="muted" data-i18n="eventLead">Отметьте событие: пересечение границы, гостиница/больница, переезд или новый паспорт.</p>
-        <label><span data-i18n="eventDate">Дата события</span><input id="eventDate" type="date" /></label>
+        <label><span data-i18n="eventDate">Дата события</span><span class="date-control"><input id="eventDate" type="date" /><span id="eventDateDisplay" class="date-display" aria-hidden="true"></span></span></label>
         <button id="applyEvent" class="primary" type="button" data-i18n="recalc">Пересчитать маршрут</button>
         <button id="clearEvent" class="secondary" type="button" data-i18n="clearEvent">Убрать событие</button>
       </div>
