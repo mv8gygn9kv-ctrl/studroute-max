@@ -45,7 +45,7 @@ const i18n = {
 };
 
 const langCycle = { ru: 'en', en: 'zh', zh: 'ru' };
-const langButtonLabel = { ru: 'EN', en: '中文', zh: 'RU' };
+const langButtonLabel = { ru: 'RU', en: 'EN', zh: '中文' };
 const dateLocale = { ru: 'ru-RU', en: 'en-GB', zh: 'zh-CN' };
 
 function t(key) { return i18n[state.lang]?.[key] || i18n.ru[key] || key; }
