@@ -1,0 +1,134 @@
+{
+  "version": "2026-09-20",
+  "mvp_scope": "Иностранный студент 18+, впервые прибывший на очное обучение в СПбГЭУ; Санкт-Петербург",
+  "disclaimer": "MVP формирует навигационный маршрут по заранее проверенным правилам. Он не является официальным решением ведомства и не заменяет консультацию уполномоченной организации.",
+  "rules": [
+    {
+      "id": "first_year_office",
+      "kind": "university",
+      "title_ru": "Явиться в отдел по работе с иностранными учащимися",
+      "title_en": "Visit the International Students Office",
+      "description_ru": "Все иностранные граждане, зачисленные на первый курс СПбГЭУ, должны явиться в отдел для оформления документов. Конкретный срок на странице СПбГЭУ не указан.",
+      "description_en": "All international students enrolled in the first year at UNECON must visit the office for document processing. The UNECON page does not state a specific deadline.",
+      "source_id": "unecon_foreign_students",
+      "sort_order": 10
+    },
+    {
+      "id": "dms_policy",
+      "kind": "university",
+      "title_ru": "Проверить и оформить полис ДМС",
+      "title_en": "Check and arrange voluntary medical insurance (VMI)",
+      "description_ru": "СПбГЭУ указывает, что для иностранных студентов полис ДМС обязателен; на странице также указаны требования к территории оформления, покрытию и сроку действия 1 год. Конкретный дедлайн на странице не указан.",
+      "description_en": "UNECON states that VMI is mandatory for international students and lists territorial, coverage and one-year validity requirements. The page does not state a specific deadline.",
+      "source_id": "unecon_foreign_students",
+      "sort_order": 15
+    },
+    {
+      "id": "dorm_registration",
+      "kind": "university",
+      "title_ru": "Передать документы для первичного миграционного учёта",
+      "title_en": "Submit documents for initial migration registration",
+      "description_ru": "Если вы живёте в общежитии СПбГЭУ, обратитесь в отдел виз и регистраций с паспортом и миграционной картой.",
+      "description_en": "If you live in a UNECON dormitory, contact the Visa and Registration Office with your passport and migration card.",
+      "source_id": "unecon_foreign_students",
+      "applies": {
+        "housing": [
+          "dorm"
+        ]
+      },
+      "due": {
+        "type": "business_days_after_arrival",
+        "days": 3
+      },
+      "sort_order": 20
+    },
+    {
+      "id": "private_registration",
+      "kind": "government",
+      "title_ru": "Оформить миграционный учёт по частному адресу",
+      "title_en": "Complete migration registration at a private address",
+      "description_ru": "При проживании по частному адресу постановку на учёт организует принимающая сторона/собственник. Для маршрута используем общий ориентир 7 рабочих дней; конкретные исключения зависят от статуса и места пребывания.",
+      "description_en": "For private accommodation, registration is handled by the host/property owner. The route uses the general 7-working-day benchmark; exceptions depend on status and place of stay.",
+      "source_id": "spb_migration_registration",
+      "applies": {
+        "housing": [
+          "private"
+        ]
+      },
+      "due": {
+        "type": "business_days_after_arrival",
+        "days": 7
+      },
+      "sort_order": 20
+    },
+    {
+      "id": "fingerprint_medical",
+      "kind": "government",
+      "title_ru": "Пройти дактилоскопию, фотографирование и медосвидетельствование",
+      "title_en": "Complete fingerprinting, photo registration and medical examination",
+      "description_ru": "Для обучения свыше 90 дней СПбГЭУ указывает срок 90 календарных дней со дня въезда. При этом к моменту подачи на продление визы/миграционного учёта необходимые процедуры уже должны быть пройдены, поэтому маршрут показывает более раннюю из применимых дат.",
+      "description_en": "For studies longer than 90 days, UNECON states a 90-calendar-day deadline from entry. The required procedures must also be completed by the time visa/migration-registration extension documents are submitted, so the route shows the earliest applicable date.",
+      "source_id": "unecon_foreign_students",
+      "applies": {
+        "stayOver90": true,
+        "citizenshipBelarus": false
+      },
+      "due": {
+        "type": "earliest_medical_due"
+      },
+      "sort_order": 50
+    },
+    {
+      "id": "visa_extension",
+      "kind": "university",
+      "title_ru": "Подать документы на продление учебной визы",
+      "title_en": "Submit documents for study visa extension",
+      "description_ru": "СПбГЭУ принимает документы не менее чем за 45 дней до окончания однократной визы.",
+      "description_en": "UNECON accepts documents at least 45 days before the single-entry visa expires.",
+      "source_id": "unecon_foreign_students",
+      "applies": {
+        "visaRequired": true,
+        "visaExpiryRequired": true
+      },
+      "due": {
+        "type": "days_before_visa_expiry",
+        "days": 45
+      },
+      "sort_order": 30
+    },
+    {
+      "id": "registration_extension",
+      "kind": "university",
+      "title_ru": "Подать документы на продление миграционного учёта",
+      "title_en": "Submit documents to extend migration registration",
+      "description_ru": "СПбГЭУ указывает срок подачи не менее чем за 45 дней до окончания регистрации.",
+      "description_en": "UNECON indicates submission at least 45 days before migration registration expires.",
+      "source_id": "unecon_foreign_students",
+      "applies": {
+        "registrationExpiryRequired": true
+      },
+      "due": {
+        "type": "days_before_registration_expiry",
+        "days": 45
+      },
+      "sort_order": 40
+    },
+    {
+      "id": "change_event",
+      "kind": "university",
+      "title_ru": "Сообщить об изменении, влияющем на регистрацию",
+      "title_en": "Report a change affecting your registration",
+      "description_ru": "После пересечения границы, пребывания в гостинице/больнице, переезда или получения нового паспорта СПбГЭУ просит обратиться в отдел виз и регистраций в течение 1 рабочего дня.",
+      "description_en": "After crossing the border, staying in a hotel/hospital, moving, or receiving a new passport, UNECON asks students to contact the Visa and Registration Office within 1 working day.",
+      "source_id": "unecon_foreign_students",
+      "applies": {
+        "eventSelected": true
+      },
+      "due": {
+        "type": "business_days_after_event",
+        "days": 1
+      },
+      "sort_order": 5
+    }
+  ]
+}

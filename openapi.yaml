@@ -1,0 +1,85 @@
+openapi: 3.1.0
+info:
+  title: StudRoute MAX API
+  version: 0.1.0
+  description: Internal MVP API for route generation and MAX launch-data validation.
+servers:
+  - url: https://your-domain.example
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: Service is healthy
+  /api/meta:
+    get:
+      summary: Get MVP scope and rules version
+      responses:
+        '200':
+          description: Metadata
+  /api/sources:
+    get:
+      summary: Get curated official sources
+      responses:
+        '200':
+          description: Sources registry
+  /api/route:
+    post:
+      summary: Build a personalized administrative route
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileRequest'
+      responses:
+        '200':
+          description: Generated route
+        '400':
+          description: Invalid profile
+  /api/validate:
+    post:
+      summary: Validate MAX WebApp initData signature
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [initData]
+              properties:
+                initData:
+                  type: string
+      responses:
+        '200':
+          description: Signature is valid
+        '401':
+          description: Signature is invalid
+components:
+  schemas:
+    ProfileRequest:
+      type: object
+      required: [arrivalDate, housing, stayOver90, citizenshipBelarus, visaRequired]
+      properties:
+        arrivalDate:
+          type: string
+          format: date
+        housing:
+          type: string
+          enum: [dorm, private]
+        stayOver90:
+          type: boolean
+        citizenshipBelarus:
+          type: boolean
+        visaRequired:
+          type: boolean
+        visaExpiry:
+          type: string
+          format: date
+        registrationExpiry:
+          type: string
+          format: date
+        eventDate:
+          type: string
+          format: date

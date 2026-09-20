@@ -1,0 +1,39 @@
+{
+  "profiles": [
+    {
+      "name": "Dorm + visa + over 90 days",
+      "profile": {
+        "arrivalDate": "2026-09-01",
+        "housing": "dorm",
+        "stayOver90": true,
+        "citizenshipBelarus": false,
+        "visaRequired": true,
+        "visaExpiry": "2026-11-30",
+        "registrationExpiry": "2026-11-30"
+      },
+      "expected_task_ids": [
+        "first_year_office",
+        "dms_policy",
+        "dorm_registration",
+        "fingerprint_medical",
+        "visa_extension",
+        "registration_extension"
+      ]
+    },
+    {
+      "name": "Private address + under 90 days",
+      "profile": {
+        "arrivalDate": "2026-09-01",
+        "housing": "private",
+        "stayOver90": false,
+        "citizenshipBelarus": false,
+        "visaRequired": false
+      },
+      "expected_task_ids": [
+        "first_year_office",
+        "dms_policy",
+        "private_registration"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+version: '1.0'
+solution: StudRoute MAX
+base_url: https://your-domain.example
+checks:
+  - id: health
+    description: Service health check
+    method: GET
+    path: /health
+    expected_status: [200]
+    expected_content_type: application/json
+    required_fields: [ok, service, version]
+  - id: sources
+    description: Curated official sources are available
+    method: GET
+    path: /api/sources
+    expected_status: [200]
+    expected_content_type: application/json
+    required_fields: [sources]
+  - id: route_dorm
+    description: Generate the core route for a dormitory student staying over 90 days
+    method: POST
+    path: /api/route
+    headers:
+      Content-Type: application/json
+    body:
+      arrivalDate: '2026-09-01'
+      housing: dorm
+      stayOver90: true
+      citizenshipBelarus: false
+      visaRequired: true
+      visaExpiry: '2026-11-30'
+      registrationExpiry: '2026-11-30'
+    expected_status: [200]
+    expected_content_type: application/json
+    required_fields: [ok, rules_version, tasks]

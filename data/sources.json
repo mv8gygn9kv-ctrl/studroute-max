@@ -1,0 +1,34 @@
+[
+  {
+    "id": "unecon_foreign_students",
+    "title": "СПбГЭУ — Отдел по работе с иностранными учащимися",
+    "url": "https://unecon.ru/mezhdunarodnye-svyazi/upravlenie-mezhdunarodnogo-sotrudnichestva/otdel-po-rabote-s-inostrannymi-uchashhimisya/",
+    "publisher": "СПбГЭУ",
+    "scope": "Правила и организационные сроки для иностранных обучающихся СПбГЭУ",
+    "checked_at": "2026-09-20"
+  },
+  {
+    "id": "spb_migration_registration",
+    "title": "Постановка иностранных граждан на учёт по месту пребывания в Санкт-Петербурге",
+    "url": "https://gu.spb.ru/188429/",
+    "publisher": "Портал государственных и муниципальных услуг Санкт-Петербурга",
+    "scope": "Миграционный учёт в Санкт-Петербурге, каналы подачи и общие требования",
+    "checked_at": "2026-09-20"
+  },
+  {
+    "id": "max_bridge",
+    "title": "MAX Bridge",
+    "url": "https://dev.max.ru/docs/webapps/bridge",
+    "publisher": "MAX для разработчиков",
+    "scope": "Взаимодействие мини-приложения с клиентом MAX",
+    "checked_at": "2026-09-20"
+  },
+  {
+    "id": "max_api",
+    "title": "MAX Bot API",
+    "url": "https://dev.max.ru/docs-api",
+    "publisher": "MAX для разработчиков",
+    "scope": "Чат-боты, сообщения, webhook/long polling",
+    "checked_at": "2026-09-20"
+  }
+]
