@@ -5,7 +5,10 @@
     "url": "https://unecon.ru/mezhdunarodnye-svyazi/upravlenie-mezhdunarodnogo-sotrudnichestva/otdel-po-rabote-s-inostrannymi-uchashhimisya/",
     "publisher": "СПбГЭУ",
     "scope": "Правила и организационные сроки для иностранных обучающихся СПбГЭУ",
-    "checked_at": "2026-09-20"
+    "checked_at": "2026-09-20",
+    "title_zh": "СПбГЭУ — 国际学生事务部门",
+    "publisher_zh": "圣彼得堡国立经济大学（СПбГЭУ）",
+    "scope_zh": "СПбГЭУ国际学生的办理规则与校内组织期限"
   },
   {
     "id": "spb_migration_registration",
@@ -13,7 +16,10 @@
     "url": "https://gu.spb.ru/188429/",
     "publisher": "Портал государственных и муниципальных услуг Санкт-Петербурга",
     "scope": "Миграционный учёт в Санкт-Петербурге, каналы подачи и общие требования",
-    "checked_at": "2026-09-20"
+    "checked_at": "2026-09-20",
+    "title_zh": "圣彼得堡外国公民居留地移民登记",
+    "publisher_zh": "圣彼得堡国家和市政服务门户",
+    "scope_zh": "圣彼得堡移民登记、办理渠道和一般要求"
   },
   {
     "id": "max_bridge",
@@ -21,7 +27,10 @@
     "url": "https://dev.max.ru/docs/webapps/bridge",
     "publisher": "MAX для разработчиков",
     "scope": "Взаимодействие мини-приложения с клиентом MAX",
-    "checked_at": "2026-09-20"
+    "checked_at": "2026-09-20",
+    "title_zh": "MAX Bridge",
+    "publisher_zh": "MAX 开发者平台",
+    "scope_zh": "小程序与MAX客户端之间的交互"
   },
   {
     "id": "max_api",
@@ -29,6 +38,9 @@
     "url": "https://dev.max.ru/docs-api",
     "publisher": "MAX для разработчиков",
     "scope": "Чат-боты, сообщения, webhook/long polling",
-    "checked_at": "2026-09-20"
+    "checked_at": "2026-09-20",
+    "title_zh": "MAX Bot API",
+    "publisher_zh": "MAX 开发者平台",
+    "scope_zh": "聊天机器人、消息、Webhook和Long Polling"
   }
 ]

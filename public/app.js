@@ -1,39 +1,79 @@
 const $ = (id) => document.getElementById(id);
+const supportedLangs = ['ru', 'en', 'zh'];
+const savedLang = localStorage.getItem('studroute.lang');
 const state = {
-  lang: localStorage.getItem('studroute.lang') || 'ru',
+  lang: supportedLangs.includes(savedLang) ? savedLang : 'ru',
   profile: JSON.parse(localStorage.getItem('studroute.profile') || 'null'),
   done: JSON.parse(localStorage.getItem('studroute.done') || '{}'),
   route: null,
   sources: [],
+  rulesVersion: '',
+  user: { mode: 'external', firstName: '' },
 };
 
 const i18n = {
   ru: {
+    eyebrow: 'MAX · ЗАБОТА О ЛЮДЯХ', tagline: 'Персональный маршрут первых административных шагов иностранного студента после приезда.',
     profileTitle: 'Соберите маршрут', profileLead: 'MVP рассчитан на иностранного студента 18+, впервые прибывшего на очное обучение в СПбГЭУ.',
     arrival: 'Дата въезда в РФ', housing: 'Где вы живёте', dorm: 'Общежитие СПбГЭУ', private: 'Частный адрес',
     over90: 'Планирую быть в РФ более 90 дней', belarus: 'Я гражданин(ка) Беларуси', visaRequired: 'Для учёбы нужна виза', visaExpiry: 'Виза действует до', regExpiry: 'Миграционный учёт действует до (если уже оформлен)', build: 'Построить маршрут',
     eventTitle: 'Что-то изменилось?', eventLead: 'Отметьте событие: пересечение границы, гостиница/больница, переезд или новый паспорт.', eventDate: 'Дата события', recalc: 'Пересчитать маршрут', clearEvent: 'Убрать событие', eventNote: 'СПбГЭУ указывает организационный срок обращения — в течение 1 рабочего дня для перечисленных изменений.',
     sourcesTitle: 'Источники', sourcesLead: 'Каждое правило привязано к первоисточнику и дате проверки.', aboutTitle: 'О продукте', about1: 'СтудМаршрут не дублирует Госуслуги: он связывает шаги университета и государственных сервисов в один персональный порядок действий.', about2: 'В MVP нет интеграции с МВД или Госуслугами. Используются заранее проверенные правила и модельные пользовательские данные.', share: 'Поделиться маршрутом в MAX', disclaimer: 'Не является официальным решением ведомства и не заменяет консультацию уполномоченной организации.',
-    navRoute: 'Маршрут', navEvent: 'Событие', navSources: 'Источники', navAbout: 'О проекте', tasks: 'задач', done: 'готово', urgent: 'срочно', source: 'Источник', due: 'до', noDue: 'срок не указан в источнике', saved: 'Маршрут сохранён на устройстве', shareText: 'Мой маршрут первых шагов после приезда сформирован в СтудМаршруте для MAX.'
+    navRoute: 'Маршрут', navEvent: 'Событие', navSources: 'Источники', navAbout: 'О проекте', tasks: 'задач', done: 'готово', urgent: 'срочно', source: 'Источник', due: 'до', noDue: 'срок не указан в источнике', saved: 'Маршрут сохранён на устройстве', shareText: 'Мой маршрут первых шагов после приезда сформирован в СтудМаршруте для MAX.',
+    copied: 'Текст скопирован', openSource: 'Открыть первоисточник', rules: 'Правила', demoMode: 'Демо-режим', externalBrowser: 'Внешний браузер', offlineDemo: 'Оффлайн-демо', dataError: 'Ошибка данных', startupError: 'Ошибка запуска', university: 'Университет', government: 'Госслужбы'
   },
   en: {
+    eyebrow: 'MAX · CARE FOR PEOPLE', tagline: 'A personalized route through the first administrative steps for an international student after arrival.',
     profileTitle: 'Build your route', profileLead: 'The MVP targets an 18+ international student arriving for full-time study at UNECON for the first time.',
     arrival: 'Date of entry to Russia', housing: 'Where you live', dorm: 'UNECON dormitory', private: 'Private address',
     over90: 'I plan to stay in Russia for more than 90 days', belarus: 'I am a citizen of Belarus', visaRequired: 'A study visa is required', visaExpiry: 'Visa valid until', regExpiry: 'Migration registration valid until (if already issued)', build: 'Build route',
     eventTitle: 'Did something change?', eventLead: 'Select an event: border crossing, hotel/hospital stay, moving, or a new passport.', eventDate: 'Event date', recalc: 'Recalculate route', clearEvent: 'Clear event', eventNote: 'UNECON states an organizational deadline of 1 working day for the listed changes.',
     sourcesTitle: 'Sources', sourcesLead: 'Every rule is linked to its primary source and review date.', aboutTitle: 'About', about1: 'StudRoute does not duplicate Gosuslugi: it connects university and government steps into one personalized sequence.', about2: 'The MVP has no live integration with the Ministry of Internal Affairs or Gosuslugi. It uses pre-verified rules and model user data.', share: 'Share route in MAX', disclaimer: 'This is not an official agency decision and does not replace advice from an authorized organization.',
-    navRoute: 'Route', navEvent: 'Event', navSources: 'Sources', navAbout: 'About', tasks: 'tasks', done: 'done', urgent: 'urgent', source: 'Source', due: 'due', noDue: 'no deadline stated in source', saved: 'Route saved on this device', shareText: 'My first-steps route after arrival was built in StudRoute for MAX.'
+    navRoute: 'Route', navEvent: 'Event', navSources: 'Sources', navAbout: 'About', tasks: 'tasks', done: 'done', urgent: 'urgent', source: 'Source', due: 'due', noDue: 'no deadline stated in source', saved: 'Route saved on this device', shareText: 'My first-steps route after arrival was built in StudRoute for MAX.',
+    copied: 'Copied', openSource: 'Open primary source', rules: 'Rules', demoMode: 'Demo mode', externalBrowser: 'External browser', offlineDemo: 'Offline demo', dataError: 'Invalid data', startupError: 'Startup error', university: 'University', government: 'Government'
+  },
+  zh: {
+    eyebrow: 'MAX · 关爱人们', tagline: '为国际学生抵达俄罗斯后的首个行政手续生成个性化办理路线。',
+    profileTitle: '生成您的办理路线', profileLead: '本MVP面向18岁以上、首次来俄就读圣彼得堡国立经济大学（СПбГЭУ）全日制课程的国际学生。',
+    arrival: '入境俄罗斯日期', housing: '您的居住地点', dorm: 'СПбГЭУ学生宿舍', private: '私人住址',
+    over90: '我计划在俄罗斯停留超过90天', belarus: '我是白俄罗斯公民', visaRequired: '学习需要签证', visaExpiry: '签证有效期至', regExpiry: '移民登记有效期至（如已办理）', build: '生成路线',
+    eventTitle: '情况发生变化了吗？', eventLead: '请选择事件：再次过境、入住酒店/医院、搬家或领取新护照。', eventDate: '事件日期', recalc: '重新计算路线', clearEvent: '清除事件', eventNote: 'СПбГЭУ规定，上述情况发生后应在1个工作日内联系相关部门。',
+    sourcesTitle: '信息来源', sourcesLead: '每条规则都链接到官方原始来源，并标注核验日期。', aboutTitle: '关于本产品', about1: '学生路线（СтудМаршрут）并非复制“Госуслуги”国家服务门户，而是把大学与政府服务中的步骤整合为一条个性化办理顺序。', about2: 'MVP目前未与俄罗斯内务部（МВД）或“Госуслуги”进行实时集成，使用的是预先核验的规则和模拟用户数据。', share: '在MAX中分享路线', disclaimer: '本工具不构成政府部门的正式决定，也不能替代主管机构的咨询。',
+    navRoute: '路线', navEvent: '变更', navSources: '来源', navAbout: '关于', tasks: '项任务', done: '已完成', urgent: '紧急', source: '来源', due: '截止', noDue: '官方来源未注明期限', saved: '路线已保存在本设备', shareText: '我已通过MAX中的“学生路线（СтудМаршрут）”生成抵达后的首个行政手续路线。',
+    copied: '文本已复制', openSource: '打开官方来源', rules: '规则', demoMode: '演示模式', externalBrowser: '外部浏览器', offlineDemo: '离线演示', dataError: '数据有误', startupError: '启动错误', university: '大学', government: '政府服务'
   }
 };
 
-function t(key) { return i18n[state.lang][key] || key; }
+const langCycle = { ru: 'en', en: 'zh', zh: 'ru' };
+const langButtonLabel = { ru: 'EN', en: '中文', zh: 'RU' };
+const dateLocale = { ru: 'ru-RU', en: 'en-GB', zh: 'zh-CN' };
+
+function t(key) { return i18n[state.lang]?.[key] || i18n.ru[key] || key; }
 function toast(msg) { const el = $('toast'); el.textContent = msg; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 1800); }
 function todayISO() { return new Date().toISOString().slice(0, 10); }
+function localizedField(obj, field) {
+  if (!obj) return '';
+  if (state.lang === 'zh') return obj[`${field}_zh`] || obj[field] || obj[`${field}_en`] || obj[`${field}_ru`] || '';
+  if (state.lang === 'en') return obj[`${field}_en`] || obj[field] || obj[`${field}_ru`] || '';
+  return obj[`${field}_ru`] || obj[field] || obj[`${field}_en`] || '';
+}
+function renderUserBadge() {
+  if (state.user.mode === 'max') $('userBadge').textContent = state.user.firstName ? `MAX · ${state.user.firstName}` : 'MAX';
+  else if (state.user.mode === 'demo') $('userBadge').textContent = t('demoMode');
+  else if (state.user.mode === 'offline') $('userBadge').textContent = t('offlineDemo');
+  else $('userBadge').textContent = t('externalBrowser');
+}
+function renderRulesBadge() {
+  $('rulesBadge').textContent = `${t('rules')}: ${state.rulesVersion || '…'}`;
+}
 
 function applyLanguage() {
-  document.documentElement.lang = state.lang;
+  document.documentElement.lang = state.lang === 'zh' ? 'zh-CN' : state.lang;
+  document.title = state.lang === 'zh' ? '学生路线 · СтудМаршрут — MAX' : (state.lang === 'en' ? 'StudRoute — MAX' : 'СтудМаршрут — MAX');
   document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = t(el.dataset.i18n); });
-  $('langBtn').textContent = state.lang === 'ru' ? 'EN' : 'RU';
+  $('langBtn').textContent = langButtonLabel[state.lang];
+  renderUserBadge();
+  renderRulesBadge();
   renderRoute();
   renderSources();
 }
@@ -72,7 +112,7 @@ async function buildRoute() {
   localStorage.setItem('studroute.profile', JSON.stringify(profile));
   const res = await fetch('/api/route', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(profile) });
   const data = await res.json();
-  if (!res.ok) { toast((data.errors || ['Ошибка данных']).join('; ')); return; }
+  if (!res.ok) { toast((data.errors || [t('dataError')]).join('; ')); return; }
   state.route = data;
   renderRoute();
   toast(t('saved'));
@@ -98,18 +138,20 @@ function renderRoute() {
 }
 
 function taskHtml(task) {
-  const title = state.lang === 'ru' ? task.title_ru : task.title_en;
-  const desc = state.lang === 'ru' ? task.description_ru : task.description_en;
+  const title = localizedField(task, 'title');
+  const desc = localizedField(task, 'description');
   const checked = state.done[task.id] ? 'checked' : '';
-  const due = task.due_date ? `${t('due')} ${new Date(task.due_date + 'T12:00:00').toLocaleDateString(state.lang === 'ru' ? 'ru-RU' : 'en-GB')}` : t('noDue');
-  const source = task.source ? `<button class="source-link" data-url="${escapeAttr(task.source.url)}">${t('source')}: ${escapeHtml(task.source.publisher)}</button>` : '';
+  const due = task.due_date ? `${t('due')} ${new Date(task.due_date + 'T12:00:00').toLocaleDateString(dateLocale[state.lang])}` : t('noDue');
+  const publisher = localizedField(task.source, 'publisher');
+  const source = task.source ? `<button class="source-link" data-url="${escapeAttr(task.source.url)}">${t('source')}: ${escapeHtml(publisher)}</button>` : '';
+  const kind = t(task.kind);
   return `<article class="task" data-urgency="${task.urgency}">
-    <div class="task-head"><input class="task-check" data-id="${task.id}" type="checkbox" ${checked}/><div><div class="task-title">${escapeHtml(title)}</div><div class="task-desc">${escapeHtml(desc)}</div><div class="task-meta"><span class="pill">${escapeHtml(due)}</span><span class="pill">${escapeHtml(task.kind)}</span>${source}</div></div></div>
+    <div class="task-head"><input class="task-check" data-id="${task.id}" type="checkbox" ${checked}/><div><div class="task-title">${escapeHtml(title)}</div><div class="task-desc">${escapeHtml(desc)}</div><div class="task-meta"><span class="pill">${escapeHtml(due)}</span><span class="pill">${escapeHtml(kind)}</span>${source}</div></div></div>
   </article>`;
 }
 
 function renderSources() {
-  $('sourceList').innerHTML = state.sources.map((s) => `<div class="source"><strong>${escapeHtml(s.title)}</strong><small>${escapeHtml(s.scope)} · ${s.checked_at}</small><button class="source-link" data-url="${escapeAttr(s.url)}">${state.lang === 'ru' ? 'Открыть первоисточник' : 'Open primary source'}</button></div>`).join('');
+  $('sourceList').innerHTML = state.sources.map((s) => `<div class="source"><strong>${escapeHtml(localizedField(s, 'title'))}</strong><small>${escapeHtml(localizedField(s, 'scope'))} · ${s.checked_at}</small><button class="source-link" data-url="${escapeAttr(s.url)}">${t('openSource')}</button></div>`).join('');
   document.querySelectorAll('#sourceList .source-link').forEach((el) => el.addEventListener('click', () => openLink(el.dataset.url)));
 }
 
@@ -127,11 +169,14 @@ async function initMax() {
     const res = await fetch('/api/validate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ initData }) });
     const data = await res.json();
     if (res.ok && data.valid) {
-      $('userBadge').textContent = data.user?.first_name ? `MAX · ${data.user.first_name}` : (data.demo ? 'Демо-режим' : 'MAX');
+      state.user = data.demo ? { mode: 'demo', firstName: '' } : { mode: 'max', firstName: data.user?.first_name || '' };
     } else {
-      $('userBadge').textContent = 'Внешний браузер';
+      state.user = { mode: 'external', firstName: '' };
     }
-  } catch { $('userBadge').textContent = 'Оффлайн-демо'; }
+  } catch {
+    state.user = { mode: 'offline', firstName: '' };
+  }
+  renderUserBadge();
 }
 
 async function init() {
@@ -141,12 +186,16 @@ async function init() {
   $('profileForm').addEventListener('submit', async (e) => { e.preventDefault(); await buildRoute(); });
   $('applyEvent').addEventListener('click', buildRoute);
   $('clearEvent').addEventListener('click', async () => { $('eventDate').value = ''; await buildRoute(); });
-  $('langBtn').addEventListener('click', () => { state.lang = state.lang === 'ru' ? 'en' : 'ru'; localStorage.setItem('studroute.lang', state.lang); applyLanguage(); });
+  $('langBtn').addEventListener('click', () => {
+    state.lang = langCycle[state.lang];
+    localStorage.setItem('studroute.lang', state.lang);
+    applyLanguage();
+  });
   $('shareBtn').addEventListener('click', () => {
     const text = t('shareText');
     if (window.WebApp?.shareMaxContent) window.WebApp.shareMaxContent({ text });
     else if (navigator.share) navigator.share({ text }).catch(() => {});
-    else navigator.clipboard?.writeText(text).then(() => toast(state.lang === 'ru' ? 'Текст скопирован' : 'Copied'));
+    else navigator.clipboard?.writeText(text).then(() => toast(t('copied')));
   });
   document.querySelectorAll('.nav-btn').forEach((btn) => btn.addEventListener('click', () => {
     document.querySelectorAll('.nav-btn').forEach((x) => x.classList.toggle('active', x === btn));
@@ -158,10 +207,10 @@ async function init() {
   const meta = await metaRes.json();
   const s = await sourceRes.json();
   state.sources = s.sources || [];
-  $('rulesBadge').textContent = `${state.lang === 'ru' ? 'Правила' : 'Rules'}: ${meta.version}`;
+  state.rulesVersion = meta.version || '';
   await initMax();
   if (state.profile) await buildRoute();
   applyLanguage();
 }
 
-init().catch((err) => { console.error(err); toast('Ошибка запуска'); });
+init().catch((err) => { console.error(err); toast(t('startupError')); });

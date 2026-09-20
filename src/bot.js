@@ -47,6 +47,33 @@ async function welcome(userId) {
   await sendMessage(userId, text);
 }
 
+
+async function welcomeZh(userId) {
+  const text = [
+    '👋 **学生路线（СтудМаршрут）**',
+    '',
+    '帮助СПбГЭУ国际学生在抵达俄罗斯后不遗漏关键行政手续：移民登记、必要程序、签证/登记延期，以及搬家或再次入境后的后续步骤。',
+    '',
+    '请在机器人界面点击 **«Открыть» / «Старт»** 打开小程序，然后在右上角切换到 **中文** 并生成个人路线。',
+    '',
+    '_本MVP不构成政府部门的正式决定。每项任务都会显示信息来源和核验日期。_'
+  ].join('\n');
+  await sendMessage(userId, text);
+}
+
+async function helpZh(userId) {
+  await sendMessage(userId, [
+    '**中文帮助**',
+    '/start — 俄语说明',
+    '/zh — 中文说明',
+    '/sources — 官方来源',
+    '/demo — 演示场景',
+    '/help — 帮助',
+    '',
+    '主要流程在MAX小程序中完成。小程序支持 Русский / English / 中文。'
+  ].join('\n'));
+}
+
 async function help(userId) {
   await sendMessage(userId, [
     '**Команды**',
@@ -89,6 +116,7 @@ export async function processUpdate(update) {
     const text = textFromUpdate(update).toLowerCase();
     if (text === '/start' || text === 'старт') return welcome(userId);
     if (text === '/help' || text === 'помощь') return help(userId);
+    if (text === '/zh' || text === '中文' || text.includes('中文')) return welcomeZh(userId);
     if (text === '/sources' || text.includes('источник')) return sources(userId);
     if (text === '/demo' || text.includes('демо')) return demo(userId);
     await sendMessage(userId, 'Основной маршрут находится в мини-приложении. Нажмите «Открыть» / «Старт» в интерфейсе бота. Для справки: /help');
@@ -105,7 +133,8 @@ export async function initBot() {
       { name: 'start', description: 'Начать работу' },
       { name: 'sources', description: 'Официальные источники' },
       { name: 'demo', description: 'Сценарий демонстрации' },
-      { name: 'help', description: 'Помощь' }
+      { name: 'help', description: 'Помощь' },
+      { name: 'zh', description: '中文说明' }
     ]);
     console.log('[bot] commands configured');
   } catch (err) {

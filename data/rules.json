@@ -11,7 +11,9 @@
       "description_ru": "Все иностранные граждане, зачисленные на первый курс СПбГЭУ, должны явиться в отдел для оформления документов. Конкретный срок на странице СПбГЭУ не указан.",
       "description_en": "All international students enrolled in the first year at UNECON must visit the office for document processing. The UNECON page does not state a specific deadline.",
       "source_id": "unecon_foreign_students",
-      "sort_order": 10
+      "sort_order": 10,
+      "title_zh": "前往国际学生事务部门办理手续",
+      "description_zh": "所有被СПбГЭУ录取的一年级国际学生都应前往国际学生事务部门办理相关文件。СПбГЭУ官网未注明具体截止日期。"
     },
     {
       "id": "dms_policy",
@@ -21,7 +23,9 @@
       "description_ru": "СПбГЭУ указывает, что для иностранных студентов полис ДМС обязателен; на странице также указаны требования к территории оформления, покрытию и сроку действия 1 год. Конкретный дедлайн на странице не указан.",
       "description_en": "UNECON states that VMI is mandatory for international students and lists territorial, coverage and one-year validity requirements. The page does not state a specific deadline.",
       "source_id": "unecon_foreign_students",
-      "sort_order": 15
+      "sort_order": 15,
+      "title_zh": "检查并办理自愿医疗保险（ДМС）",
+      "description_zh": "СПбГЭУ规定国际学生必须持有ДМС自愿医疗保险，并对办理地区、保障范围和一年有效期提出要求。官网未注明具体截止日期。"
     },
     {
       "id": "dorm_registration",
@@ -40,7 +44,9 @@
         "type": "business_days_after_arrival",
         "days": 3
       },
-      "sort_order": 20
+      "sort_order": 20,
+      "title_zh": "提交首次移民登记所需材料",
+      "description_zh": "如果您住在СПбГЭУ学生宿舍，请携带护照和移民卡前往签证与登记部门办理。"
     },
     {
       "id": "private_registration",
@@ -59,7 +65,9 @@
         "type": "business_days_after_arrival",
         "days": 7
       },
-      "sort_order": 20
+      "sort_order": 20,
+      "title_zh": "在私人住址办理移民登记",
+      "description_zh": "如果您住在私人住址，移民登记通常由接待方或房屋所有人办理。本路线采用7个工作日的一般参考期限；具体例外取决于身份和实际居住地点。"
     },
     {
       "id": "fingerprint_medical",
@@ -76,7 +84,9 @@
       "due": {
         "type": "earliest_medical_due"
       },
-      "sort_order": 50
+      "sort_order": 50,
+      "title_zh": "完成指纹登记、拍照和体检",
+      "description_zh": "对于学习时间超过90天的学生，СПбГЭУ注明应在入境之日起90个自然日内完成相关程序。同时，在提交签证或移民登记延期材料前也必须完成，因此路线会显示适用日期中更早的一个。"
     },
     {
       "id": "visa_extension",
@@ -94,7 +104,9 @@
         "type": "days_before_visa_expiry",
         "days": 45
       },
-      "sort_order": 30
+      "sort_order": 30,
+      "title_zh": "提交学习签证延期材料",
+      "description_zh": "СПбГЭУ要求至少在一次入境签证到期前45天提交延期材料。"
     },
     {
       "id": "registration_extension",
@@ -111,7 +123,9 @@
         "type": "days_before_registration_expiry",
         "days": 45
       },
-      "sort_order": 40
+      "sort_order": 40,
+      "title_zh": "提交移民登记延期材料",
+      "description_zh": "СПбГЭУ注明，应至少在现有移民登记到期前45天提交延期材料。"
     },
     {
       "id": "change_event",
@@ -128,7 +142,9 @@
         "type": "business_days_after_event",
         "days": 1
       },
-      "sort_order": 5
+      "sort_order": 5,
+      "title_zh": "报告影响移民登记的信息变更",
+      "description_zh": "在再次过境、入住酒店或医院、搬家或领取新护照后，СПбГЭУ要求学生在1个工作日内联系签证与登记部门。"
     }
   ]
 }

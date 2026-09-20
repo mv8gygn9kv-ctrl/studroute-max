@@ -73,3 +73,20 @@ test('medical deadline respects extension prerequisite', () => {
   const task = r.tasks.find((x) => x.id === 'fingerprint_medical');
   assert.equal(task.due_date, '2026-10-16');
 });
+
+
+test('Chinese localization is present for every route task', () => {
+  const route = buildRoute({
+    arrivalDate: '2026-09-01', housing: 'dorm', stayOver90: true,
+    citizenshipBelarus: false, visaRequired: true,
+    visaExpiry: '2026-11-30', registrationExpiry: '2026-11-30'
+  });
+  assert.equal(route.ok, true);
+  assert(route.tasks.length > 0);
+  for (const task of route.tasks) {
+    assert.equal(typeof task.title_zh, 'string');
+    assert(task.title_zh.length > 0);
+    assert.equal(typeof task.description_zh, 'string');
+    assert(task.description_zh.length > 0);
+  }
+});
