@@ -33,7 +33,7 @@ curl https://<ваш-домен>/health
 Затем запустите:
 
 ```bash
-npm run bot:me
+npm run check:bot
 npm run webhook:set
 ```
 

@@ -1,25 +1,36 @@
 version: '1.0'
-solution: StudRoute MAX
-base_url: https://your-domain.example
+solution: StudRoute MAX (MAXimum Care)
+base_url: https://studroute-max.onrender.com
 checks:
   - id: health
     description: Service health check
     method: GET
     path: /health
+    role: none
     expected_status: [200]
     expected_content_type: application/json
     required_fields: [ok, service, version]
+  - id: meta
+    description: Rules version and MVP scope
+    method: GET
+    path: /api/meta
+    role: none
+    expected_status: [200]
+    expected_content_type: application/json
+    required_fields: [version, mvp_scope, disclaimer]
   - id: sources
     description: Curated official sources are available
     method: GET
     path: /api/sources
+    role: none
     expected_status: [200]
     expected_content_type: application/json
     required_fields: [sources]
   - id: route_dorm
-    description: Generate the core route for a dormitory student staying over 90 days
+    description: Core route for a dormitory student staying over 90 days with a study visa
     method: POST
     path: /api/route
+    role: none
     headers:
       Content-Type: application/json
     body:
@@ -32,4 +43,39 @@ checks:
       registrationExpiry: '2026-11-30'
     expected_status: [200]
     expected_content_type: application/json
-    required_fields: [ok, rules_version, tasks]
+    required_fields: [ok, rules_version, generated_at, tasks]
+  - id: route_event
+    description: A reported move adds a task due in 1 working day
+    method: POST
+    path: /api/route
+    role: none
+    headers:
+      Content-Type: application/json
+    body:
+      arrivalDate: '2026-09-01'
+      housing: dorm
+      stayOver90: false
+      citizenshipBelarus: false
+      visaRequired: false
+      eventType: move
+      eventDate: '2026-09-18'
+    expected_status: [200]
+    expected_content_type: application/json
+    required_fields: [ok, tasks]
+  - id: route_invalid
+    description: Invalid profile is rejected with a clear error list
+    method: POST
+    path: /api/route
+    role: none
+    headers:
+      Content-Type: application/json
+    body:
+      arrivalDate: '2026-09-10'
+      housing: dorm
+      stayOver90: true
+      citizenshipBelarus: false
+      visaRequired: true
+      visaExpiry: '2026-09-01'
+    expected_status: [400]
+    expected_content_type: application/json
+    required_fields: [ok, errors]

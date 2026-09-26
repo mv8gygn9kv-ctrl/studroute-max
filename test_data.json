@@ -34,6 +34,42 @@
         "dms_policy",
         "private_registration"
       ]
+    },
+    {
+      "name": "Dorm + reported move (event)",
+      "profile": {
+        "arrivalDate": "2026-09-01",
+        "housing": "dorm",
+        "stayOver90": false,
+        "citizenshipBelarus": false,
+        "visaRequired": false,
+        "eventType": "move",
+        "eventDate": "2026-09-18"
+      },
+      "expected_task_ids": [
+        "change_event",
+        "first_year_office",
+        "dms_policy",
+        "dorm_registration"
+      ],
+      "expected_due": {
+        "change_event": "2026-09-21"
+      }
+    },
+    {
+      "name": "Belarus citizen, over 90 days (no fingerprinting step)",
+      "profile": {
+        "arrivalDate": "2026-09-01",
+        "housing": "dorm",
+        "stayOver90": true,
+        "citizenshipBelarus": true,
+        "visaRequired": false
+      },
+      "expected_task_ids": [
+        "first_year_office",
+        "dms_policy",
+        "dorm_registration"
+      ]
     }
   ]
 }

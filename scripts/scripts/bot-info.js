@@ -1,4 +1,4 @@
-import { getMe } from '../src/max-api.js';
+import { getMe } from '../../src/max-api.js';
 
 try {
   const bot = await getMe();
