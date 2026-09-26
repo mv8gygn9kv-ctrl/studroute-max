@@ -65,7 +65,7 @@ const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
 
     if (req.method === 'GET' && url.pathname === '/health') {
-      return json(res, 200, { ok: true, service: 'studroute-max', version: '0.1.0' });
+      return json(res, 200, { ok: true, service: 'studroute-max', version: '0.2.0' });
     }
 
     if (req.method === 'GET' && url.pathname === '/api/meta') {

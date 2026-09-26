@@ -1,10 +1,13 @@
 openapi: 3.1.0
 info:
   title: StudRoute MAX API
-  version: 0.1.0
-  description: Internal MVP API for route generation and MAX launch-data validation.
+  version: 0.2.0
+  description: |
+    MVP API for route generation and MAX launch-data validation.
+    Rules and deadlines come from pre-verified official sources (data/rules.json, data/sources.json).
+    A deadline is returned only when the source states it; otherwise due_date is null.
 servers:
-  - url: https://your-domain.example
+  - url: https://studroute-max.onrender.com
 paths:
   /health:
     get:
@@ -12,18 +15,46 @@ paths:
       responses:
         '200':
           description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok, service, version]
+                properties:
+                  ok: { type: boolean }
+                  service: { type: string }
+                  version: { type: string }
   /api/meta:
     get:
-      summary: Get MVP scope and rules version
+      summary: MVP scope and rules version
       responses:
         '200':
           description: Metadata
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [version, mvp_scope, disclaimer]
+                properties:
+                  version: { type: string, format: date, description: Date the rules were checked }
+                  mvp_scope: { type: string }
+                  disclaimer: { type: string }
+                  demo_allowed: { type: boolean }
   /api/sources:
     get:
-      summary: Get curated official sources
+      summary: Curated official sources
       responses:
         '200':
           description: Sources registry
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [sources]
+                properties:
+                  sources:
+                    type: array
+                    items: { $ref: '#/components/schemas/Source' }
   /api/route:
     post:
       summary: Build a personalized administrative route
@@ -31,13 +62,23 @@ paths:
         required: true
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/ProfileRequest'
+            schema: { $ref: '#/components/schemas/ProfileRequest' }
       responses:
         '200':
           description: Generated route
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/RouteResponse' }
         '400':
           description: Invalid profile
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok, errors]
+                properties:
+                  ok: { type: boolean, const: false }
+                  errors: { type: array, items: { type: string } }
   /api/validate:
     post:
       summary: Validate MAX WebApp initData signature
@@ -49,37 +90,94 @@ paths:
               type: object
               required: [initData]
               properties:
-                initData:
-                  type: string
+                initData: { type: string }
       responses:
         '200':
           description: Signature is valid
         '401':
           description: Signature is invalid
+  /webhook:
+    post:
+      summary: MAX Bot API webhook (bot_started, message_created)
+      description: Called by MAX. Requires header X-Max-Bot-Api-Secret equal to WEBHOOK_SECRET.
+      parameters:
+        - in: header
+          name: X-Max-Bot-Api-Secret
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        '200':
+          description: Update accepted
+        '401':
+          description: Wrong secret
 components:
   schemas:
     ProfileRequest:
       type: object
       required: [arrivalDate, housing, stayOver90, citizenshipBelarus, visaRequired]
       properties:
-        arrivalDate:
-          type: string
-          format: date
-        housing:
-          type: string
-          enum: [dorm, private]
-        stayOver90:
-          type: boolean
-        citizenshipBelarus:
-          type: boolean
-        visaRequired:
-          type: boolean
-        visaExpiry:
-          type: string
-          format: date
-        registrationExpiry:
-          type: string
-          format: date
-        eventDate:
-          type: string
-          format: date
+        arrivalDate: { type: string, format: date }
+        housing: { type: string, enum: [dorm, private] }
+        stayOver90: { type: boolean }
+        citizenshipBelarus: { type: boolean }
+        visaRequired: { type: boolean }
+        visaExpiry: { type: string, format: date, description: Must not be earlier than arrivalDate }
+        registrationExpiry: { type: string, format: date, description: Must not be earlier than arrivalDate }
+        eventDate: { type: string, format: date }
+        eventType: { type: string, enum: [border, hotel, move, passport] }
+    Source:
+      type: object
+      required: [id, title, url, publisher, checked_at, audience]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        title_en: { type: string }
+        title_zh: { type: string }
+        short_title_ru: { type: string }
+        short_title_en: { type: string }
+        short_title_zh: { type: string }
+        url: { type: string, format: uri }
+        publisher: { type: string }
+        scope: { type: string }
+        checked_at: { type: string, format: date }
+        audience: { type: string, enum: [user, tech] }
+    Task:
+      type: object
+      required: [id, kind, title_ru, title_en, title_zh, due_date, deadline_type, urgency, source]
+      properties:
+        id: { type: string }
+        kind: { type: string, enum: [university, government] }
+        title_ru: { type: string }
+        title_en: { type: string }
+        title_zh: { type: string }
+        description_ru: { type: string }
+        why_ru: { type: string }
+        action_ru: { type: string }
+        where_ru: { type: string }
+        prepare_ru: { type: array, items: { type: string } }
+        deadline_short_ru: { type: string }
+        deadline_note_ru: { type: string }
+        due_date: { type: [string, 'null'], format: date }
+        days_left: { type: [integer, 'null'] }
+        deadline_type: { type: string, enum: [calculated_from_source, not_set_by_source] }
+        urgency: { type: string, enum: [overdue, urgent, soon, normal, info] }
+        event_type: { type: [string, 'null'], enum: [border, hotel, move, passport, null] }
+        source: { $ref: '#/components/schemas/Source' }
+      description: Every *_ru text field also exists as *_en and *_zh.
+    RouteResponse:
+      type: object
+      required: [ok, rules_version, generated_at, tasks]
+      properties:
+        ok: { type: boolean }
+        rules_version: { type: string, format: date }
+        generated_at: { type: string, format: date }
+        mvp_scope: { type: string }
+        disclaimer: { type: string }
+        tasks:
+          type: array
+          items: { $ref: '#/components/schemas/Task' }

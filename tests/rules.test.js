@@ -90,3 +90,16 @@ test('Chinese localization is present for every route task', () => {
     assert(task.description_zh.length > 0);
   }
 });
+
+test('test_data.json profiles produce exactly the expected tasks', async () => {
+  const { default: fs } = await import('node:fs');
+  const data = JSON.parse(fs.readFileSync(new URL('../test_data.json', import.meta.url), 'utf8'));
+  for (const item of data.profiles) {
+    const route = buildRoute(item.profile);
+    assert.equal(route.ok, true, item.name);
+    assert.deepEqual(route.tasks.map((x) => x.id).sort(), [...item.expected_task_ids].sort(), item.name);
+    for (const [id, due] of Object.entries(item.expected_due || {})) {
+      assert.equal(route.tasks.find((x) => x.id === id).due_date, due, item.name);
+    }
+  }
+});
