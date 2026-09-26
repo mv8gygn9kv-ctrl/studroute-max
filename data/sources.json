@@ -11,7 +11,11 @@
     "scope_zh": "СПбГЭУ国际学生的办理规则和校内行政期限",
     "title_en": "UNECON — International Students Office",
     "publisher_en": "Saint Petersburg State University of Economics (UNECON)",
-    "scope_en": "Rules and administrative deadlines for UNECON international students"
+    "scope_en": "Rules and administrative deadlines for UNECON international students",
+    "audience": "user",
+    "short_title_ru": "СПбГЭУ: иностранным студентам",
+    "short_title_en": "UNECON: international students",
+    "short_title_zh": "СПбГЭУ：国际学生"
   },
   {
     "id": "spb_migration_registration",
@@ -25,7 +29,11 @@
     "scope_zh": "圣彼得堡移民登记的办理渠道和一般要求",
     "title_en": "Migration registration for foreign nationals at the place of stay in Saint Petersburg",
     "publisher_en": "Saint Petersburg Public Services Portal",
-    "scope_en": "Migration registration in Saint Petersburg, submission channels and general requirements"
+    "scope_en": "Migration registration in Saint Petersburg, submission channels and general requirements",
+    "audience": "user",
+    "short_title_ru": "Миграционный учёт в СПб",
+    "short_title_en": "Migration registration in St Petersburg",
+    "short_title_zh": "圣彼得堡移民登记"
   },
   {
     "id": "max_bridge",
@@ -39,7 +47,11 @@
     "scope_zh": "小程序与 MAX 客户端之间的交互",
     "title_en": "MAX Bridge",
     "publisher_en": "MAX for Developers",
-    "scope_en": "Interaction between the mini app and the MAX client"
+    "scope_en": "Interaction between the mini app and the MAX client",
+    "audience": "tech",
+    "short_title_ru": "MAX Bridge",
+    "short_title_en": "MAX Bridge",
+    "short_title_zh": "MAX Bridge"
   },
   {
     "id": "max_api",
@@ -53,6 +65,10 @@
     "scope_zh": "聊天机器人、消息、Webhook 与 Long Polling",
     "title_en": "MAX Bot API",
     "publisher_en": "MAX for Developers",
-    "scope_en": "Chatbots, messages, webhooks and long polling"
+    "scope_en": "Chatbots, messages, webhooks and long polling",
+    "audience": "tech",
+    "short_title_ru": "MAX Bot API",
+    "short_title_en": "MAX Bot API",
+    "short_title_zh": "MAX Bot API"
   }
 ]

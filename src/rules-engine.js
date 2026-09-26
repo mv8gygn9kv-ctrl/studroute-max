@@ -75,17 +75,40 @@ function urgency(due, now = new Date()) {
   return 'normal';
 }
 
+export const EVENT_TYPES = ['border', 'hotel', 'move', 'passport'];
+const LANGS = ['ru', 'en', 'zh'];
+const LOCALIZED_FIELDS = ['title', 'description', 'why', 'action', 'where', 'prepare', 'deadline_short', 'deadline_note'];
+
 export function validateProfile(profile = {}) {
   const errors = [];
-  if (!parseDate(profile.arrivalDate)) errors.push('arrivalDate must be YYYY-MM-DD');
+  const arrival = parseDate(profile.arrivalDate);
+  if (!arrival) errors.push('arrivalDate must be YYYY-MM-DD');
   if (!['dorm', 'private'].includes(profile.housing)) errors.push('housing must be dorm or private');
   for (const key of ['stayOver90', 'citizenshipBelarus', 'visaRequired']) {
     if (typeof profile[key] !== 'boolean') errors.push(`${key} must be boolean`);
   }
-  if (profile.visaExpiry && !parseDate(profile.visaExpiry)) errors.push('visaExpiry must be YYYY-MM-DD');
-  if (profile.registrationExpiry && !parseDate(profile.registrationExpiry)) errors.push('registrationExpiry must be YYYY-MM-DD');
-  if (profile.eventDate && !parseDate(profile.eventDate)) errors.push('eventDate must be YYYY-MM-DD');
+  for (const key of ['visaExpiry', 'registrationExpiry', 'eventDate']) {
+    if (profile[key] && !parseDate(profile[key])) errors.push(`${key} must be YYYY-MM-DD`);
+  }
+  for (const key of ['visaExpiry', 'registrationExpiry']) {
+    const value = parseDate(profile[key]);
+    if (arrival && value && value < arrival) errors.push(`${key} must not be earlier than arrivalDate`);
+  }
+  if (profile.eventType != null && !EVENT_TYPES.includes(profile.eventType)) {
+    errors.push(`eventType must be one of ${EVENT_TYPES.join(', ')}`);
+  }
   return errors;
+}
+
+function localized(rule) {
+  const out = {};
+  for (const field of LOCALIZED_FIELDS) {
+    for (const lang of LANGS) {
+      const key = `${field}_${lang}`;
+      if (rule[key] != null) out[key] = rule[key];
+    }
+  }
+  return out;
 }
 
 export function buildRoute(profile, now = new Date()) {
@@ -99,14 +122,12 @@ export function buildRoute(profile, now = new Date()) {
       return {
         id: rule.id,
         kind: rule.kind,
-        title_ru: rule.title_ru,
-        title_en: rule.title_en,
-        title_zh: rule.title_zh,
-        description_ru: rule.description_ru,
-        description_en: rule.description_en,
-        description_zh: rule.description_zh,
+        ...localized(rule),
         due_date: toISODate(due),
+        days_left: due ? daysBetween(now, due) : null,
+        deadline_type: due ? 'calculated_from_source' : 'not_set_by_source',
         urgency: urgency(due, now),
+        event_type: rule.id === 'change_event' ? (profile.eventType || null) : undefined,
         source: sourceMap.get(rule.source_id) || null,
         sort_order: rule.sort_order ?? 100,
       };
@@ -120,6 +141,7 @@ export function buildRoute(profile, now = new Date()) {
   return {
     ok: true,
     rules_version: ruleData.version,
+    generated_at: toISODate(now),
     mvp_scope: ruleData.mvp_scope,
     disclaimer: ruleData.disclaimer,
     tasks,
@@ -136,4 +158,8 @@ export function getRulesMeta() {
     mvp_scope: ruleData.mvp_scope,
     disclaimer: ruleData.disclaimer,
   };
+}
+
+export function getRules() {
+  return ruleData.rules;
 }
