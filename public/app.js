@@ -1,4 +1,5 @@
 import { LANGS, ui } from './i18n.js';
+import { isSafeUrl, linkButtonHtml, shouldUseBridge } from './links.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -122,11 +123,17 @@ function showBanner(message, retry) {
   $('bannerRetry').onclick = () => { $('banner').classList.add('hidden'); retry(); };
 }
 
-function openLink(url) {
-  try {
-    if (window.WebApp?.openLink) { window.WebApp.openLink(url); return; }
-  } catch { /* fall through */ }
-  window.open(url, '_blank', 'noopener,noreferrer');
+// Ссылки — настоящие <a href target="_blank">. Внутри MAX открываем их через MAX Bridge,
+// вне MAX (обычный браузер) оставляем стандартный переход по ссылке.
+function openLink(url, event, el) {
+  if (!isSafeUrl(url)) { event?.preventDefault(); return; }
+  if (shouldUseBridge(window.WebApp)) {
+    event?.preventDefault();
+    try { window.WebApp.openLink(url); return; } catch { /* fall through */ }
+    window.open(url, '_blank', 'noopener,noreferrer');
+    return;
+  }
+  if (el?.tagName !== 'A') window.open(url, '_blank', 'noopener,noreferrer');
 }
 
 /* ---------- Status helpers ---------- */
@@ -351,11 +358,11 @@ function taskHtml(task, isNext) {
         <dt>${esc(t('whereTitle'))}</dt><dd>${esc(field(task, 'where'))}</dd>
         <dt>${esc(t('prepareTitle'))}</dt><dd><ul>${prepareList.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></dd>
         <dt>${esc(t('deadlineBasis'))}</dt><dd>${esc(field(task, 'deadline_note'))}</dd>
-        ${src ? `<dt>${esc(t('sourceTitle'))}</dt><dd>${esc(field(src, 'title'))} · ${esc(t('checkedOn'))} ${esc(formatDate(src.checked_at))}</dd>` : ''}
+        ${src ? `<dt>${esc(t('sourceTitle'))}</dt><dd>${linkButtonHtml(src.url, field(src, 'title'), 'text-link')} · ${esc(t('checkedOn'))} ${esc(formatDate(src.checked_at))}</dd>` : ''}
       </dl>
     </details>
     <div class="task-actions">
-      ${src ? `<button type="button" class="btn btn-outline" data-url="${esc(src.url)}">${esc(t('openSource'))}</button>` : ''}
+      ${src ? linkButtonHtml(src.url, t('openSource')) : ''}
       <button type="button" class="btn ${done ? 'btn-ghost' : 'btn-primary'}" data-toggle-done="${esc(task.id)}">${done ? esc(t('markUndone')) : `✓ ${esc(t('markDone'))}`}</button>
     </div>
   </article>`;
@@ -370,6 +377,9 @@ function renderEventView() {
   $('eventCurrent').classList.toggle('hidden', !current);
   if (current) $('eventCurrent').textContent = t('eventCurrent', { event: t(`evShort_${p.eventType}`), date: formatDate(p.eventDate) });
   $('clearEvent').classList.toggle('hidden', !current);
+  // Правило о сообщении об изменениях — из того же источника, что и задача change_event.
+  const src = state.sources.find((s) => s.id === 'unecon_foreign_students');
+  $('eventSource').innerHTML = src ? linkButtonHtml(src.url, t('openSource'), 'btn btn-small btn-outline') : '';
 }
 
 function renderHelp() {
@@ -379,7 +389,7 @@ function renderHelp() {
   const contact = (title, text, src) => `
     <div class="contact">
       <strong>${esc(title)}</strong><p>${esc(text)}</p>
-      ${src ? `<button type="button" class="btn btn-small btn-outline" data-url="${esc(src.url)}">${esc(t('openSource'))}</button>` : ''}
+      ${src ? linkButtonHtml(src.url, t('openSource'), 'btn btn-small btn-outline') : ''}
     </div>`;
   $('helpView').innerHTML = `
     <div class="card">
@@ -405,7 +415,7 @@ function renderHelp() {
     <div class="card">
       <h2>${esc(t('aboutTitle'))}</h2>
       <p>${esc(t('aboutText'))}</p>
-      <button type="button" class="btn btn-small btn-outline" data-url="https://github.com/mv8gygn9kv-ctrl/studroute-max">${esc(t('github'))}</button>
+      ${linkButtonHtml('https://github.com/mv8gygn9kv-ctrl/studroute-max', t('github'), 'btn btn-small btn-outline')}
     </div>`;
 }
 
@@ -416,7 +426,7 @@ function sourceHtml(s) {
       <small>${esc(field(s, 'publisher'))}</small>
       <p>${esc(field(s, 'scope'))}</p>
       <div class="source-foot"><span class="tag tag-light">${esc(t('checkedOn'))} ${esc(formatDate(s.checked_at))}</span>
-      <button type="button" class="btn btn-small btn-outline" data-url="${esc(s.url)}">${esc(t('openSource'))}</button></div>
+      ${linkButtonHtml(s.url, t('openSource'), 'btn btn-small btn-outline')}</div>
     </div>`;
 }
 
@@ -674,7 +684,7 @@ function bindEvents() {
   document.addEventListener('click', (e) => {
     const el = e.target.closest('[data-url],[data-toggle-done],[data-scroll],[data-filter],[data-goto]');
     if (!el) return;
-    if (el.dataset.url) openLink(el.dataset.url);
+    if (el.dataset.url) openLink(el.dataset.url, e, el);
     else if (el.dataset.toggleDone) toggleDone(el.dataset.toggleDone);
     else if (el.dataset.scroll) scrollToTask(el.dataset.scroll);
     else if (el.dataset.filter) { state.filter = el.dataset.filter; renderFilters(); renderTasks(); }

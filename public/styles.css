@@ -79,6 +79,8 @@ p { margin: 0; }
 .btn-on-blue-outline { background: transparent; color: #fff; border-color: rgba(255,255,255,.7); }
 .btn-row { display: flex; flex-wrap: wrap; gap: 8px; }
 .btn-row .btn { flex: 1 1 auto; }
+.text-link { color: var(--blue-700); font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
+.event-source { margin: 4px 0 14px; }
 .link-btn { border: 0; background: none; padding: 0; color: var(--blue-700); font-weight: 700; text-align: left; cursor: pointer; font-size: 14px; }
 .spinner { display: none; width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(255,255,255,.45); border-top-color: #fff; animation: spin .8s linear infinite; }
 .is-loading .spinner { display: inline-block; }
@@ -157,7 +159,7 @@ p { margin: 0; }
 .summary-card { gap: 8px; padding: 14px 16px; }
 .summary-card h2 { font-size: 15px; }
 .summary-card .chip { font-size: 12px; padding: 4px 9px; }
-.deadline-card { gap: 4px; }
+.deadline-card { gap: 4px; align-content: start; }
 .deadline-date { font-size: 22px; font-weight: 800; color: var(--blue-900); }
 .deadline-rel { font-size: 14px; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
 .deadline-overdue .deadline-date, .deadline-overdue .deadline-rel { color: var(--danger); }
@@ -252,6 +254,7 @@ details[open] > summary::before { transform: rotate(90deg); }
   .dashboard { grid-template-columns: 1.4fr 1fr; }
   .dashboard .progress-card, .dashboard .alerts { grid-column: 1 / -1; }
   .card { padding: 20px; }
+  .next-card .btn-row .btn { white-space: nowrap; }
 }
 @media (max-width: 360px) {
   .brand-sub { display: none; }
