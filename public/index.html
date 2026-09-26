@@ -3,90 +3,172 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#6f37ff" />
+  <meta name="theme-color" content="#1447C4" />
+  <meta name="description" content="СтудМаршрут — персональный маршрут первых административных шагов иностранного студента СПбГЭУ в MAX." />
   <title>СтудМаршрут — MAX</title>
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <main class="shell">
-    <header class="hero">
-      <div class="hero-top">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2.2"/><circle cx="18" cy="5" r="2.2"/><path d="M8.2 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.8"/></svg>
+        </span>
         <div>
-          <div class="eyebrow" data-i18n="eyebrow">MAX · ЗАБОТА О ЛЮДЯХ</div>
-          <h1 id="brand">СтудМаршрут</h1>
+          <div class="brand-name" data-i18n="brand">СтудМаршрут</div>
+          <div class="brand-sub" data-i18n="brandSub">Иностранным студентам СПбГЭУ</div>
         </div>
-        <button id="langBtn" class="chip" type="button">RU</button>
       </div>
-      <p id="tagline" data-i18n="tagline">Персональный маршрут первых административных шагов иностранного студента после приезда.</p>
-      <div class="hero-meta">
-        <span id="userBadge">Демо-режим</span>
-        <span id="rulesBadge">Правила: загрузка…</span>
+      <div class="lang-switch" role="group" aria-label="Язык / Language / 语言">
+        <button type="button" data-lang="ru" lang="ru">RU</button>
+        <button type="button" data-lang="en" lang="en">EN</button>
+        <button type="button" data-lang="zh" lang="zh-CN">中文</button>
       </div>
-    </header>
+    </div>
+    <div class="status-strip">
+      <span id="userBadge" class="tag"></span>
+      <span id="rulesBadge" class="tag"></span>
+    </div>
+  </header>
 
-    <section id="routeView" class="view active">
-      <div class="card">
-        <h2 data-i18n="profileTitle">Соберите маршрут</h2>
-        <p class="muted" data-i18n="profileLead">MVP рассчитан на иностранного студента 18+, впервые прибывшего на очное обучение в СПбГЭУ.</p>
-        <form id="profileForm" class="form-grid">
-          <label><span data-i18n="arrival">Дата въезда в РФ</span><span class="date-control"><input id="arrivalDate" type="date" required /><span id="arrivalDateDisplay" class="date-display" aria-hidden="true"></span></span></label>
-          <label><span data-i18n="housing">Где вы живёте</span>
-            <select id="housing">
-              <option value="dorm" data-i18n="dorm">Общежитие СПбГЭУ</option>
-              <option value="private" data-i18n="private">Частный адрес</option>
-            </select>
-          </label>
-          <label class="switch-row"><input id="stayOver90" type="checkbox" checked /><span data-i18n="over90">Планирую быть в РФ более 90 дней</span></label>
-          <label class="switch-row"><input id="citizenshipBelarus" type="checkbox" /><span data-i18n="belarus">Я гражданин(ка) Беларуси</span></label>
-          <label class="switch-row"><input id="visaRequired" type="checkbox" checked /><span data-i18n="visaRequired">Для учёбы нужна виза</span></label>
-          <label id="visaExpiryLabel"><span data-i18n="visaExpiry">Виза действует до</span><span class="date-control"><input id="visaExpiry" type="date" /><span id="visaExpiryDisplay" class="date-display" aria-hidden="true"></span></span></label>
-          <label><span data-i18n="regExpiry">Миграционный учёт действует до (если уже оформлен)</span><span class="date-control"><input id="registrationExpiry" type="date" /><span id="registrationExpiryDisplay" class="date-display" aria-hidden="true"></span></span></label>
-          <button class="primary" type="submit" data-i18n="build">Построить маршрут</button>
-        </form>
+  <div id="banner" class="banner hidden" role="alert">
+    <span id="bannerText"></span>
+    <button id="bannerRetry" type="button" class="btn btn-small btn-danger-outline" data-i18n="retry">Повторить</button>
+  </div>
+
+  <main class="shell">
+    <section id="routeView" class="view active" aria-live="polite">
+      <div id="loading" class="card skeleton" aria-busy="true">
+        <div class="sk-line w60"></div><div class="sk-line w90"></div><div class="sk-line w75"></div>
       </div>
 
-      <div id="summary" class="summary hidden"></div>
+      <div id="onboarding" class="card onboarding hidden">
+        <h1 data-i18n="onbTitle">Маршрут после приезда за 2 минуты</h1>
+        <p data-i18n="onbLead"></p>
+        <ol class="onb-steps">
+          <li><span class="onb-num">1</span><span data-i18n="onbStep1"></span></li>
+          <li><span class="onb-num">2</span><span data-i18n="onbStep2"></span></li>
+          <li><span class="onb-num">3</span><span data-i18n="onbStep3"></span></li>
+        </ol>
+        <p class="privacy"><span aria-hidden="true">🔒</span> <span data-i18n="onbPrivacy"></span></p>
+        <div class="btn-row">
+          <button id="onbStart" type="button" class="btn btn-primary" data-i18n="onbStart">Начать</button>
+          <button id="onbExample" type="button" class="btn btn-ghost" data-i18n="onbExample">Пример для проверки</button>
+        </div>
+      </div>
+
+      <form id="profileForm" class="card form hidden" novalidate>
+        <div class="card-head">
+          <h2 data-i18n="formTitle">Ваша ситуация</h2>
+          <button id="formExample" type="button" class="btn btn-small btn-ghost" data-i18n="onbExample">Пример для проверки</button>
+        </div>
+        <p class="muted" data-i18n="formLead"></p>
+
+        <fieldset class="step">
+          <legend><span class="step-num">1</span><span data-i18n="q1"></span></legend>
+          <span class="date-control"><input id="arrivalDate" type="date" required aria-describedby="arrivalDateDisplay" /><span id="arrivalDateDisplay" class="date-display"></span></span>
+        </fieldset>
+
+        <fieldset class="step">
+          <legend><span class="step-num">2</span><span data-i18n="q2"></span></legend>
+          <div class="choice-grid">
+            <label class="choice"><input type="radio" name="housing" value="dorm" checked /><span class="choice-body"><strong data-i18n="dorm"></strong><small data-i18n="dormHint"></small></span></label>
+            <label class="choice"><input type="radio" name="housing" value="private" /><span class="choice-body"><strong data-i18n="private"></strong><small data-i18n="privateHint"></small></span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="step">
+          <legend><span class="step-num">3</span><span data-i18n="q3"></span></legend>
+          <label class="toggle"><input id="stayOver90" type="checkbox" checked /><span class="toggle-ui" aria-hidden="true"></span><span data-i18n="over90"></span></label>
+          <label class="toggle"><input id="visaRequired" type="checkbox" checked /><span class="toggle-ui" aria-hidden="true"></span><span data-i18n="visaRequired"></span></label>
+          <label class="toggle"><input id="citizenshipBelarus" type="checkbox" /><span class="toggle-ui" aria-hidden="true"></span><span data-i18n="belarus"></span></label>
+        </fieldset>
+
+        <fieldset class="step">
+          <legend><span class="step-num">4</span><span data-i18n="q4"></span></legend>
+          <label id="visaExpiryLabel" class="field"><span data-i18n="visaExpiry"></span><span class="date-control"><input id="visaExpiry" type="date" /><span id="visaExpiryDisplay" class="date-display"></span></span></label>
+          <label class="field"><span data-i18n="regExpiry"></span><span class="date-control"><input id="registrationExpiry" type="date" /><span id="registrationExpiryDisplay" class="date-display"></span></span><small class="hint" data-i18n="regExpiryHint"></small></label>
+        </fieldset>
+
+        <div id="formError" class="form-error hidden" role="alert"></div>
+        <button id="buildBtn" class="btn btn-primary btn-block" type="submit"><span class="spinner" aria-hidden="true"></span><span id="buildLabel" data-i18n="build">Построить маршрут</span></button>
+        <p class="privacy center"><span aria-hidden="true">🔒</span> <span data-i18n="privacyShort"></span></p>
+      </form>
+
+      <div id="dashboard" class="dashboard hidden"></div>
+      <div id="profileSummary" class="card summary-card hidden"></div>
+      <div id="filters" class="filters hidden" role="tablist"></div>
       <div id="taskList" class="task-list"></div>
+      <div id="routeActions" class="btn-row route-actions hidden">
+        <button id="shareBtn" type="button" class="btn btn-primary" data-i18n="share">Поделиться в MAX</button>
+        <button id="resetBtn" type="button" class="btn btn-ghost" data-i18n="reset">Начать заново</button>
+      </div>
     </section>
 
     <section id="eventView" class="view">
       <div class="card">
-        <h2 data-i18n="eventTitle">Что-то изменилось?</h2>
-        <p class="muted" data-i18n="eventLead">Отметьте событие: пересечение границы, гостиница/больница, переезд или новый паспорт.</p>
-        <label><span data-i18n="eventDate">Дата события</span><span class="date-control"><input id="eventDate" type="date" /><span id="eventDateDisplay" class="date-display" aria-hidden="true"></span></span></label>
-        <button id="applyEvent" class="primary" type="button" data-i18n="recalc">Пересчитать маршрут</button>
-        <button id="clearEvent" class="secondary" type="button" data-i18n="clearEvent">Убрать событие</button>
+        <h2 data-i18n="eventTitle">Что изменилось?</h2>
+        <p class="muted" data-i18n="eventLead"></p>
+        <div id="eventNeedsRoute" class="notice hidden">
+          <span data-i18n="eventNeedsRoute"></span>
+          <button type="button" class="btn btn-small btn-primary" data-goto="routeView" data-i18n="goRoute">К маршруту</button>
+        </div>
+        <div id="eventForm">
+          <div class="choice-list" role="radiogroup">
+            <label class="choice"><input type="radio" name="eventType" value="border" /><span class="choice-body"><strong data-i18n="ev_border"></strong><small data-i18n="ev_borderHint"></small></span></label>
+            <label class="choice"><input type="radio" name="eventType" value="hotel" /><span class="choice-body"><strong data-i18n="ev_hotel"></strong><small data-i18n="ev_hotelHint"></small></span></label>
+            <label class="choice"><input type="radio" name="eventType" value="move" /><span class="choice-body"><strong data-i18n="ev_move"></strong><small data-i18n="ev_moveHint"></small></span></label>
+            <label class="choice"><input type="radio" name="eventType" value="passport" /><span class="choice-body"><strong data-i18n="ev_passport"></strong><small data-i18n="ev_passportHint"></small></span></label>
+          </div>
+          <label class="field"><span data-i18n="eventDate"></span><span class="date-control"><input id="eventDate" type="date" /><span id="eventDateDisplay" class="date-display"></span></span></label>
+          <div id="eventError" class="form-error hidden" role="alert"></div>
+          <div id="eventCurrent" class="notice notice-info hidden"></div>
+          <div class="btn-row">
+            <button id="applyEvent" class="btn btn-primary" type="button" data-i18n="applyEvent">Добавить в маршрут</button>
+            <button id="clearEvent" class="btn btn-ghost" type="button" data-i18n="clearEvent">Убрать событие</button>
+          </div>
+        </div>
       </div>
-      <div class="note" data-i18n="eventNote">СПбГЭУ указывает организационный срок обращения — в течение 1 рабочего дня для перечисленных изменений.</div>
     </section>
+
+    <section id="helpView" class="view"></section>
 
     <section id="sourcesView" class="view">
       <div class="card">
-        <h2 data-i18n="sourcesTitle">Источники</h2>
-        <p class="muted" data-i18n="sourcesLead">Каждое правило привязано к первоисточнику и дате проверки.</p>
-        <div id="sourceList"></div>
+        <h2 data-i18n="sourcesTitle">Официальные источники</h2>
+        <p class="muted" data-i18n="sourcesLead"></p>
+        <div id="sourceList" class="source-list"></div>
+        <details class="tech-sources">
+          <summary data-i18n="techSources"></summary>
+          <div id="techSourceList" class="source-list"></div>
+        </details>
       </div>
     </section>
 
-    <section id="aboutView" class="view">
-      <div class="card">
-        <h2 data-i18n="aboutTitle">О продукте</h2>
-        <p data-i18n="about1">СтудМаршрут не дублирует Госуслуги: он связывает шаги университета и государственных сервисов в один персональный порядок действий.</p>
-        <p data-i18n="about2">В MVP нет интеграции с МВД или Госуслугами. Используются заранее проверенные правила и модельные пользовательские данные.</p>
-        <button id="shareBtn" class="primary" type="button" data-i18n="share">Поделиться маршрутом в MAX</button>
-      </div>
-      <div class="note" data-i18n="disclaimer">Не является официальным решением ведомства и не заменяет консультацию уполномоченной организации.</div>
-    </section>
+    <p class="footer-note" data-i18n="disclaimer"></p>
   </main>
 
   <nav class="bottom-nav" aria-label="Навигация">
-    <button class="nav-btn active" data-view="routeView">🧭<span data-i18n="navRoute">Маршрут</span></button>
-    <button class="nav-btn" data-view="eventView">⚡<span data-i18n="navEvent">Событие</span></button>
-    <button class="nav-btn" data-view="sourcesView">🔗<span data-i18n="navSources">Источники</span></button>
-    <button class="nav-btn" data-view="aboutView">ⓘ<span data-i18n="navAbout">О проекте</span></button>
+    <button class="nav-btn active" type="button" data-view="routeView">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h7a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h7"/></svg>
+      <span data-i18n="navRoute">Маршрут</span>
+    </button>
+    <button class="nav-btn" type="button" data-view="eventView">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
+      <span data-i18n="navEvent">Изменения</span>
+    </button>
+    <button class="nav-btn" type="button" data-view="helpView">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6"/><path d="M12 17h.01"/></svg>
+      <span data-i18n="navHelp">Справка</span>
+    </button>
+    <button class="nav-btn" type="button" data-view="sourcesView">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>
+      <span data-i18n="navSources">Источники</span>
+    </button>
   </nav>
 
-  <div id="toast" class="toast" role="status"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="https://st.max.ru/js/max-web-app.js"></script>
   <script type="module" src="/app.js"></script>
 </body>
